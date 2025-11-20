@@ -1,0 +1,223 @@
+<!-- Updated Aesthetic Gradient Quote Generator with Premium Voice Controls + Hindi Translator -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Aesthetic Gradient Quote Generator + Voice Controls</title>
+  <style>
+    :root{
+      --glass-bg: rgba(255,255,255,0.10);
+      --glass-border: rgba(255,255,255,0.25);
+      --card-radius: 18px;
+      --accent: 255,255,255;
+      --blur: 10px;
+      --pad: 28px;
+      font-family: Inter, sans-serif;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0}
+    body{
+      display:grid;place-items:center;padding:32px;
+      background: linear-gradient(135deg,#ff9a9e,#fad0c4,#fbc2eb,#a6c1ee,#cfd9df);
+      background-size:400% 400%;
+      animation: gradientShift 12s ease infinite;
+    }
+    @keyframes gradientShift{
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+    }
+    .app{
+      width:min(960px,95%);
+      backdrop-filter: blur(6px) saturate(120%);
+      background: rgba(255,255,255,0.13);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 8px 30px rgba(8,12,24,0.22);
+      display:grid;gap:20px;
+    }
+    header{display:flex;justify-content:space-between;align-items:center}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{height:46px;width:46px;display:grid;place-items:center;border-radius:12px;background:rgba(255,255,255,0.25);font-weight:700}
+    h1{margin:0;font-size:20px}
+    .card{display:grid;grid-template-columns:1fr 260px;gap:20px}
+    .quote-area{
+      padding:var(--pad);
+      background: rgba(255,255,255,0.12);
+      border-radius:var(--card-radius);
+      border:1px solid rgba(255,255,255,0.20);
+      display:flex;flex-direction:column;gap:16px;
+    }
+    .quote-text{font-size:22px;font-weight:600}
+    .controls{display:flex;gap:10px}
+    .btn{
+      padding:10px 14px;border-radius:12px;border:none;cursor:pointer;font-weight:600;
+      background:rgba(255,255,255,0.20);
+      backdrop-filter:blur(4px);
+    }
+    .emoji-column{display:flex;flex-direction:column;align-items:center;gap:10px}
+    .big-emoji{font-size:62px}
+    .voice-box{
+      padding:16px;background:rgba(255,255,255,0.18);
+      border-radius:16px;border:1px solid rgba(255,255,255,0.25);
+      display:grid;gap:12px
+    }
+    footer{opacity:0.85;font-size:13px;display:flex;justify-content:space-between}
+  </style>
+</head>
+<body>
+  <main class="app" id="app">
+    <header>
+      <div class="brand">
+        <div class="logo">QG</div>
+        <div><h1>Aesthetic Quote Generator</h1></div>
+      </div>
+      <div>Auto-refresh: <strong id="autoState">On</strong></div>
+    </header>
+
+    <section class="card">
+      <div class="quote-area" id="quoteArea">
+        <div class="quote-text" id="quoteText">Loading...</div>
+
+        <!-- 🔵 Hindi Translate Button Added -->
+        <button class="btn" id="translateBtn" style="margin-bottom:10px;">🌐 Hindi</button>
+
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div id="quoteAuthor"></div>
+          <div class="controls">
+            <button class="btn" id="newBtn">New Quote</button>
+            <button class="btn" id="copyBtn">Copy</button>
+            <button class="btn" id="shareBtn">Share</button>
+          </div>
+        </div>
+      </div>
+
+      <aside class="emoji-column">
+        <div class="big-emoji" id="moodEmoji">😊</div>
+        <div id="moodLabel" style="font-size:18px">Happy</div>
+
+        <div class="voice-box">
+          <button class="btn" id="speakBtn">🔊 Speak</button>
+          <button class="btn" id="stopBtn">⏹ Stop</button>
+          <label>Voice:</label>
+          <select id="voiceSelect" class="btn"></select>
+          <label>Volume</label><input type="range" id="vol" min="0" max="1" step="0.1" value="1">
+          <label>Speed</label><input type="range" id="rate" min="0.5" max="2" step="0.1" value="1">
+          <label>Pitch</label><input type="range" id="pitch" min="0" max="2" step="0.1" value="1">
+        </div>
+      </aside>
+    </section>
+
+    <footer>
+      <div>Press New Quote or wait (auto rotates)</div>
+      <div>With Voice Controls</div>
+    </footer>
+
+    <audio id="bgMusic" loop>
+      <source src="m2.mp3" type="audio/mp3">
+    </audio>
+    <button class="btn" id="musicBtn" style="margin-top:10px;">🎧 Play Music</button>
+  </main>
+
+<script>
+// QUOTES
+const quotes=[
+  {
+    text:"Do what you can, with what you have.",
+    text_hi:"जो कर सकते हो, उसी से शुरुआत करो।",
+    author:"— Roosevelt",
+    author_hi:"— रूज़वेल्ट",
+    mood:'calm'
+  },
+  {
+    text:"The only way to do great work is to love what you do.",
+    text_hi:"बेहतरीन काम का एक ही तरीका है — उसे प्यार करो जो तुम करते हो।",
+    author:"— Steve Jobs",
+    author_hi:"— स्टीव जॉब्स",
+    mood:'inspired'
+  },
+  {
+    text:"You are stronger than you seem.",
+    text_hi:"आप दिखने से कहीं अधिक मज़बूत हैं।",
+    author:"— A.A. Milne",
+    author_hi:"— ए.ए. मिल्ने",
+    mood:'encouraging'
+  }
+];
+
+const moodMap={
+  calm:{emoji:'🌿',label:'Calm'},
+  inspired:{emoji:'🤩',label:'Inspired'},
+  encouraging:{emoji:'💪',label:'Strong'}
+};
+
+// UI
+const quoteText=document.getElementById('quoteText');
+const quoteAuthor=document.getElementById('quoteAuthor');
+const translateBtn=document.getElementById('translateBtn');
+let current=0;
+let hindi=false;
+
+function showQuote(i){
+  current=i%quotes.length;
+  const q=quotes[current];
+
+  if(hindi){
+    quoteText.textContent=q.text_hi;
+    quoteAuthor.textContent=q.author_hi;
+  } else {
+    quoteText.textContent=q.text;
+    quoteAuthor.textContent=q.author;
+  }
+
+  const m=moodMap[q.mood];
+  moodEmoji.textContent=m.emoji;
+  moodLabel.textContent=m.label;
+}
+
+showQuote(0);
+newBtn.onclick=()=>showQuote(current+1);
+
+// 🔵 Hindi Translation Logic
+translateBtn.onclick=()=>{
+  hindi=!hindi;
+  translateBtn.textContent = hindi ? "🌐 English" : "🌐 Hindi";
+  showQuote(current);
+};
+
+// Speech
+let voices=[];
+function loadVoices(){
+  voices=speechSynthesis.getVoices();
+  voiceSelect.innerHTML='';
+  voices.forEach((v,i)=>voiceSelect.innerHTML+=`<option value="${i}">${v.name}</option>`);
+}
+loadVoices();
+speechSynthesis.onvoiceschanged=loadVoices;
+
+function speakQuote(){
+  const text = quoteText.textContent + " " + quoteAuthor.textContent;
+  const u=new SpeechSynthesisUtterance(text);
+  u.voice=voices[voiceSelect.value];
+  u.volume=vol.value;
+  u.rate=rate.value;
+  u.pitch=pitch.value;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
+speakBtn.onclick=speakQuote;
+stopBtn.onclick=()=>speechSynthesis.cancel();
+
+// MUSIC
+const music=document.getElementById('bgMusic');
+const musicBtn=document.getElementById('musicBtn');
+let playing=false;
+musicBtn.onclick=()=>{
+  if(!playing){music.play();musicBtn.textContent='⏸ Pause Music';playing=true;}
+  else{music.pause();musicBtn.textContent='🎧 Play Music';playing=false;}
+};
+</script>
+</body>
+</html>
