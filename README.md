@@ -77,25 +77,28 @@ Pure HTML + CSS + JavaScript (no frameworks).
 
 
 ## 📁 Project Structure
+AestheticQuoteGenerator/
+├── 📄 index.html
+├── 🎨 style.css
+├── ⚙️ script.js
+│
+├── 🖼️ assets/
+│   ├── 🌅 bg.jpg
+│   └── 🖍️ logo.png
+│
+├── ✨ other-images/
+├── 🔤 fonts/
+│   └── 🅰️ custom-font.ttf
+│
+├── 📚 data/
+│   └── 📜 quotes.json
+│
+└── 📦 dist/
+    ├── 📄 index.min.html
+    ├── 🎨 style.min.css
+    └── ⚙️ script.min.js
 
 
-📦 Aesthetic-Gradient-Quote-Generator
-│
-├── 📄 index.html          # Main HTML file (UI layout + structure)
-├── 🎨 style.css           # Gradient backgrounds, glassmorphism, animations
-├── ⚙️ script.js           # Quote logic, moods, voice controls, music player
-│
-├── 🎵 m2.mp3              # Background Lo-Fi / Anuv Jain-style music
-│
-├── 📂 assets/             # All external project files
-│   ├── 🖼️ images/         # Screenshots / preview images
-│   ├── 🎭 icons/          # Emojis / SVG UI icons (optional)
-│   └── 🔤 fonts/          # Custom font files (if added)
-│
-├── 📂 output/             # Generated previews / GIFs
-│   └── 🖼️ preview.png     # Final output screenshot of the project
-│
-└── 📘 README.md           # Documentation of the entire project
 
 ---
 
